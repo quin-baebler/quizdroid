@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         rvTopics = findViewById(R.id.rvTopics)
         rvTopics.layoutManager = LinearLayoutManager(this)
-        rvTopics.adapter = ViewAdapter(this)
+        QuizApp.quizData.addSampleData()
+        rvTopics.adapter = ViewAdapter(QuizApp.quizData)
     }
 }

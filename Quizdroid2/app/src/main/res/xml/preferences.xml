@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="download_url"
+        android:title="Download URL"
+        android:summary="url to download questions" />
+
+    <EditTextPreference
+        android:key="download_interval"
+        android:title="Download Interval"
+        android:summary="Time (in minutes) between trying to download file"
+        android:inputType="number" />
+</PreferenceScreen>

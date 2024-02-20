@@ -4,6 +4,9 @@ import android.app.Application
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
+
+
+
 // Had to do some research onto creating Parcelables and Android Studio ended up auto generating
 // most of the parcelable methods
 class QuizApp : Application() {

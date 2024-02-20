@@ -34,6 +34,7 @@ class ViewAdapter(val quiz : TopicData) : RecyclerView.Adapter<ViewHolder>() {
         holder.topic = quiz.topicData[position]
     }
 }
+
 class ViewHolder(val view: View,
                  var topic: QuizApp.Topic,
                  var overviews: String? = null,

@@ -1,5 +1,16 @@
 package edu.uw.ischool.qbaebler.quizdroid
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.os.Environment
+import android.util.Log
+import android.view.Display.Mode
+import org.json.JSONArray
+import java.io.BufferedInputStream
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
+
 // implementation of TopicRepository to store hardcoded data
 class TopicData: QuizApp.TopicRepository {
     val topicData = arrayListOf<QuizApp.Topic>()
@@ -13,6 +24,51 @@ class TopicData: QuizApp.TopicRepository {
 
     override fun removeTopic(t: QuizApp.Topic) {
         this.topicData.remove(t)
+    }
+
+    fun getFile(context: Context): InputStream? {
+        return try {
+            context.assets.open("questions.json")
+        } catch (e: IOException) {
+            Log.e("TopicRepository", "Error opening file: $e")
+            null
+        }
+    }
+
+    fun createJSON(context: Context){
+        val sharedPrefs = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+        val url = sharedPrefs.getString("download_url", "")
+        //val interval = sharedPrefs.getInt("download_interval", 0)
+        val file = getFile(context)
+        if (url != "") {
+            // download from url
+        }
+
+        if (file != null) {
+            val text = file.reader().use { it.readText() }
+            val jsonArray = JSONArray(text)
+            Log.i("testLength", "${jsonArray.length()}")
+
+            for (i in 0..jsonArray.length() - 1) {
+                val topic = jsonArray.getJSONObject(i)
+                val title = topic.getString("title")
+                val desc = topic.getString("desc")
+                val questions = topic.getJSONArray("questions")
+                val formattedQuestion = ArrayList<QuizApp.Question>()
+                for (j in 0..questions.length() - 1) {
+                    val question = questions.getJSONObject(j)
+                    val text = question.getString("text")
+                    val correctIndex = question.getInt("answer") - 1
+                    val answers = question.getJSONArray("answers")
+                    val formattedAnswers = ArrayList<String>()
+                    for (k in 0..answers.length() - 1) {
+                        formattedAnswers.add(answers[k].toString())
+                    }
+                    formattedQuestion.add(QuizApp.Question(text, formattedAnswers, correctIndex))
+                }
+                this.addTopic(QuizApp.Topic(title, desc, desc, formattedQuestion))
+            }
+        }
     }
 
     fun addSampleData() {

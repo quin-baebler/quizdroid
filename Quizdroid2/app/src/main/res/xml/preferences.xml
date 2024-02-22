@@ -3,6 +3,7 @@
     <EditTextPreference
         android:key="download_url"
         android:title="Download URL"
+        android:text="http://tednewardsandbox.site44.com/questions.json"
         android:summary="url to download questions" />
 
     <EditTextPreference

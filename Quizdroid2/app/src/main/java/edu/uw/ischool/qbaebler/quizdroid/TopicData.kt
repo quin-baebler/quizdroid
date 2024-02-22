@@ -8,6 +8,7 @@ import android.view.Display.Mode
 import org.json.JSONArray
 import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 
@@ -27,6 +28,7 @@ class TopicData: QuizApp.TopicRepository {
     }
 
     fun getFile(context: Context): InputStream? {
+        Log.i("testLength", "$")
         return try {
             context.assets.open("questions.json")
         } catch (e: IOException) {
@@ -38,16 +40,26 @@ class TopicData: QuizApp.TopicRepository {
     fun createJSON(context: Context){
         val sharedPrefs = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
         val url = sharedPrefs.getString("download_url", "")
+
         //val interval = sharedPrefs.getInt("download_interval", 0)
-        val file = getFile(context)
-        if (url != "") {
-            // download from url
+        val file = if (url == "") {
+            getFile(context)
+        } else {
+            val filePath = File(context.getExternalFilesDir(null), "questions.json")
+            if (filePath.exists()) {
+                FileInputStream(filePath)
+            } else {
+                null
+            }
         }
 
+
         if (file != null) {
-            val text = file.reader().use { it.readText() }
+            val inputStream = BufferedInputStream(file)
+            val reader = inputStream.reader()
+            val text = reader.use { it.readText() }
             val jsonArray = JSONArray(text)
-            Log.i("testLength", "${jsonArray.length()}")
+
 
             for (i in 0..jsonArray.length() - 1) {
                 val topic = jsonArray.getJSONObject(i)
@@ -70,6 +82,31 @@ class TopicData: QuizApp.TopicRepository {
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     fun addSampleData() {
         val mathq1 = QuizApp.Question("What is 4 x 3", arrayListOf("10", "12", "13", "40"), 1)

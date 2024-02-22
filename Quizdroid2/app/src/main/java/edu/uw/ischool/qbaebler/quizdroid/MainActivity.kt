@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var rvTopics : RecyclerView
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
        // var url = intent.getStringExtra("URL")
        // var dInterval = intent.getStringExtra("INTERVAL")
 
